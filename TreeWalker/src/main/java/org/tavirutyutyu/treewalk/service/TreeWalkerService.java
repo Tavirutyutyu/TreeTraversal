@@ -2,18 +2,24 @@ package org.tavirutyutyu.treewalk.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.tavirutyutyu.treewalk.model.AccessEventEntity;
 import org.tavirutyutyu.treewalk.model.AccessedFilesDTO;
+import org.tavirutyutyu.treewalk.model.AccessedFilesEntity;
 import org.tavirutyutyu.treewalk.repository.AccessEventRepository;
 import org.tavirutyutyu.treewalk.repository.AccessedFilesRepository;
 
 import java.io.IOException;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashSet;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class TreeWalkerService {
+
     private final AccessEventRepository eventRepository;
     private final AccessedFilesRepository filesRepository;
 
@@ -24,18 +30,28 @@ public class TreeWalkerService {
     }
 
     public AccessedFilesDTO getUnique(String directory) throws IOException {
-        Set<String> fileNames = new HashSet<>();
-        Files.walkFileTree(Path.of(directory), new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs){
-                fileNames.add(file.getFileName().toString());
-                return FileVisitResult.CONTINUE;
-            }
-            @Override
-            public FileVisitResult visitFileFailed(Path dir, IOException exc){
-                return FileVisitResult.CONTINUE;
-            }
-        });
+        Set<String> fileNames = getFileNames(directory);
+        save(directory, fileNames);
         return new AccessedFilesDTO(fileNames);
+    }
+    private Set<String> getFileNames(String path) throws IOException {
+        try (Stream<Path> paths = Files.walk(Paths.get(path))) {
+            return paths.filter(Files::isRegularFile).map(p -> p.getFileName().toString()).collect(Collectors.toSet());
+        }
+    }
+
+    private void save(String directory, Set<String> accessedFiles) {
+        String username = System.getProperty("user.name");
+        AccessEventEntity accessEvent = new AccessEventEntity();
+        accessEvent.setUsername(username);
+        accessEvent.setRequest("Requested Directory: " + directory);
+        accessEvent.setAccessTime(LocalDateTime.now());
+        accessEvent = eventRepository.save(accessEvent);
+        for (String fileName : accessedFiles) {
+            AccessedFilesEntity accessedFile = new AccessedFilesEntity();
+            accessedFile.setFilename(fileName);
+            accessedFile.setEvent(accessEvent);
+            filesRepository.save(accessedFile);
+        }
     }
 }
