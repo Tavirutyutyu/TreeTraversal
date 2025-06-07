@@ -1,5 +1,7 @@
 package org.tavirutyutyu.treewalk.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tavirutyutyu.treewalk.model.AccessEventEntity;
@@ -11,11 +13,16 @@ import org.tavirutyutyu.treewalk.repository.AccessedFilesRepository;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class TreeWalkerService {
+    private static final Logger logger = LoggerFactory.getLogger(TreeWalkerService.class);
+
     private final AccessEventRepository eventRepository;
     private final AccessedFilesRepository filesRepository;
 
@@ -26,21 +33,20 @@ public class TreeWalkerService {
     }
 
     public AccessedFilesDTO getUnique(String directory) throws IOException {
-        Set<String> fileNames = new HashSet<>();
-        Files.walkFileTree(Path.of(directory), new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                fileNames.add(file.getFileName().toString());
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult visitFileFailed(Path dir, IOException exc) {
-                return FileVisitResult.CONTINUE;
-            }
-        });
+        Set<String> fileNames = getFileNames(directory);
         save(directory, fileNames);
+
+        logger.info("Directory is {}", directory);
+        for (String filename : fileNames) {
+            logger.info("Processing file {}", filename);
+        }
+
         return new AccessedFilesDTO(fileNames);
+    }
+    private Set<String> getFileNames(String path) throws IOException {
+        try (Stream<Path> paths = Files.walk(Paths.get(path))) {
+            return paths.filter(Files::isRegularFile).map(p -> p.getFileName().toString()).collect(Collectors.toSet());
+        }
     }
 
     private void save(String directory, Set<String> accessedFiles) {
@@ -48,6 +54,7 @@ public class TreeWalkerService {
         AccessEventEntity accessEvent = new AccessEventEntity();
         accessEvent.setUsername(username);
         accessEvent.setRequest("Requested Directory: " + directory);
+        accessEvent.setAccessTime(LocalDateTime.now());
         accessEvent = eventRepository.save(accessEvent);
         for (String fileName : accessedFiles) {
             AccessedFilesEntity accessedFile = new AccessedFilesEntity();
