@@ -2,7 +2,9 @@ package org.tavirutyutyu.treewalk.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.tavirutyutyu.treewalk.model.AccessEventEntity;
 import org.tavirutyutyu.treewalk.model.AccessedFilesDTO;
+import org.tavirutyutyu.treewalk.model.AccessedFilesEntity;
 import org.tavirutyutyu.treewalk.repository.AccessEventRepository;
 import org.tavirutyutyu.treewalk.repository.AccessedFilesRepository;
 
@@ -27,15 +29,31 @@ public class TreeWalkerService {
         Set<String> fileNames = new HashSet<>();
         Files.walkFileTree(Path.of(directory), new SimpleFileVisitor<Path>() {
             @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs){
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
                 fileNames.add(file.getFileName().toString());
                 return FileVisitResult.CONTINUE;
             }
+
             @Override
-            public FileVisitResult visitFileFailed(Path dir, IOException exc){
+            public FileVisitResult visitFileFailed(Path dir, IOException exc) {
                 return FileVisitResult.CONTINUE;
             }
         });
+        save(directory, fileNames);
         return new AccessedFilesDTO(fileNames);
+    }
+
+    private void save(String directory, Set<String> accessedFiles) {
+        String username = System.getProperty("user.name");
+        AccessEventEntity accessEvent = new AccessEventEntity();
+        accessEvent.setUsername(username);
+        accessEvent.setRequest("Requested Directory: " + directory);
+        accessEvent = eventRepository.save(accessEvent);
+        for (String fileName : accessedFiles) {
+            AccessedFilesEntity accessedFile = new AccessedFilesEntity();
+            accessedFile.setFilename(fileName);
+            accessedFile.setEvent(accessEvent);
+            filesRepository.save(accessedFile);
+        }
     }
 }
