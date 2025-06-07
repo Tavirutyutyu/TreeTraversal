@@ -2,7 +2,7 @@ package org.tavirutyutyu.treewalk.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.tavirutyutyu.treewalk.model.AccessedFilesDTO;
 import org.tavirutyutyu.treewalk.model.DirectoryDTO;
@@ -20,7 +20,7 @@ public class TreeWalkerController {
     }
 
     @GetMapping("/get_unique")
-    public AccessedFilesDTO getUnique(@RequestBody DirectoryDTO directory) throws IOException {
+    public AccessedFilesDTO getUnique(@RequestParam DirectoryDTO directory) throws IOException {
         return service.getUnique(directory.directory());
     }
 }
