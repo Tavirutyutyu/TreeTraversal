@@ -13,7 +13,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "accessed_file")
 public class AccessedFilesEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

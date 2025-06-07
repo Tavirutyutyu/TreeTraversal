@@ -1,4 +1,6 @@
 package org.tavirutyutyu.treewalk.model;
 
-public record AccessedFilesDTO() {
+import java.util.Set;
+
+public record AccessedFilesDTO(Set<String> fileNames) {
 }
