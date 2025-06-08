@@ -2,6 +2,7 @@ package org.tavirutyuty.history.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.tavirutyuty.history.History;
 import org.tavirutyuty.history.model.AccessedFilesEntity;
 import org.tavirutyuty.history.model.HistoryDTO;
 import org.tavirutyuty.history.repository.AccessEventRepository;
