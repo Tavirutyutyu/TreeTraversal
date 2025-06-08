@@ -1,5 +1,6 @@
 package org.tavirutyuty.history.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ public class HistoryController {
         this.service = service;
     }
 
+    @Operation(summary = "This endpoint will return the whole history from the database.")
     @GetMapping("/history")
     public List<HistoryDTO> getAllHistory(){
         return service.getAllHistory();
