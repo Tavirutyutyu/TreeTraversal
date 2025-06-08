@@ -38,3 +38,5 @@ stop:
 	podman stop postgres-container || true
 	podman stop treewalker-container || true
 	podman stop history-container || true
+
+build-and-run: build run-all
