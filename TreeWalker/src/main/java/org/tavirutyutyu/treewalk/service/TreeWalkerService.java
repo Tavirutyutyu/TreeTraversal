@@ -35,13 +35,13 @@ public class TreeWalkerService {
         return new AccessedFilesDTO(fileNames);
     }
     private Set<String> getFileNames(String path) throws IOException {
-        try (Stream<Path> paths = Files.walk(Paths.get(path))) {
+        try (Stream<Path> paths = Files.walk(Paths.get("/host"+path))) {
             return paths.filter(Files::isRegularFile).map(p -> p.getFileName().toString()).collect(Collectors.toSet());
         }
     }
 
     private void save(String directory, Set<String> accessedFiles) {
-        String username = System.getProperty("user.name");
+        String username = System.getenv("HOST_USERNAME");
         AccessEventEntity accessEvent = new AccessEventEntity();
         accessEvent.setUsername(username);
         accessEvent.setRequest("Requested Directory: " + directory);
