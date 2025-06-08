@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        project: [ "TreeWalk", "History" ]
+        project: [ "TreeWalker", "History" ]
 
     steps:
       - uses: actions/checkout@v4
