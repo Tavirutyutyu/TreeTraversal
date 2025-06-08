@@ -34,11 +34,10 @@ public class TreeWalkerService {
         save(directory, fileNames);
         return new AccessedFilesDTO(fileNames);
     }
+
     private Set<String> getFileNames(String path) throws IOException {
-        if (isRunningInContainer()){
-            path = "/host" + path;
-        }
-        try (Stream<Path> paths = Files.walk(Paths.get(path))) {
+        String fullPath = isRunningInContainer() ? "/host" + path : path;
+        try (Stream<Path> paths = Files.walk(Paths.get(fullPath))) {
             return paths.filter(Files::isRegularFile).map(p -> p.getFileName().toString()).collect(Collectors.toSet());
         }
     }
@@ -59,15 +58,8 @@ public class TreeWalkerService {
     }
 
     private boolean isRunningInContainer() {
-        Path cgroup = Paths.get("/proc/1/cgroup");
-        if (Files.exists(cgroup)) {
-            try {
-                String content = Files.readString(cgroup);
-                return content.contains("docker") || content.contains("kubepods") || content.contains("podman");
-            } catch (IOException e) {
-                return false;
-            }
-        }
-        return false;
+        String podmanEnv = System.getenv("container");
+        return "podman".equalsIgnoreCase(podmanEnv);
     }
+
 }
