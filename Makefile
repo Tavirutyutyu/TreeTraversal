@@ -3,7 +3,7 @@ USERNAME := $(shell whoami)
 DB_USER := postgres
 DB_PASS := secret
 DB_NAME := tree_walk
-DB_PORT := 5432
+DB_PORT := 5433
 
 build: 
 	podman build --build-arg USERNAME=${USERNAME} --build-arg APP_DIR=TreeWalker -t treewalker-image -f Dockerfile .
@@ -17,16 +17,20 @@ run-db:
 		-d docker.io/library/postgres:16
 
 run-treewalker:
-	podman run --rm --name treewalker-container \
-		-e DB_URL=jdbc:postgresql://localhost:${DB_PORT}/${DB_NAME} \
+	until podman exec postgres-container pg_isready -U ${DB_USER} -d ${DB_NAME}; do echo "Waiting for Postgres..."; sleep 1; done
+	podman run --rm -d --name treewalker-container \
+		-e DB_URL=jdbc:postgresql://host.containers.internal:${DB_PORT}/${DB_NAME} \
 		-e DB_USERNAME=${DB_USER} \
 		-e DB_PASSWORD=${DB_PASS} \
+		-e HOST_USERNAME=${USERNAME} \
+		-v /:/host:ro \
 		-p 8080:8080 \
 		treewalker-image
 
 run-history:
-	podman run --rm --name history-container \
-		-e DB_URL=jdbc:postgresql://localhost:${DB_PORT}/${DB_NAME} \
+	until podman exec postgres-container pg_isready -U ${DB_USER} -d ${DB_NAME}; do echo "Waiting for Postgres..."; sleep 1; done
+	podman run --rm -d --name history-container \
+		-e DB_URL=jdbc:postgresql://host.containers.internal:${DB_PORT}/${DB_NAME} \
 		-e DB_USERNAME=${DB_USER} \
 		-e DB_PASSWORD=${DB_PASS} \
 		-p 8081:8080 \

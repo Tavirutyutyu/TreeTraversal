@@ -1,22 +1,15 @@
-FROM eclipse-temurin:21-jdk as build
-
-ARG USERNAME
+FROM docker.io/eclipse-temurin:21 as build 
+ARG APP_DIR
 WORKDIR /app
-
-COPY . ./
-
-WORKDIR /app/${APP_DIR}
+COPY ${APP_DIR} ./appdir
+WORKDIR /app/appdir
 RUN chmod +x ./gradlew
 RUN ./gradlew clean bootJar
 
-FROM eclipse-temurin:21-jdk
-
+FROM docker.io/eclipse-temurin:21-jre
 ARG USERNAME
 ENV USERNAME=${USERNAME}
-
 WORKDIR /app
-COPY --from=build /app/${APP_DIR}/build/libs/*.jar app.jar
-
+COPY --from=build /app/appdir/build/libs/*.jar app.jar
 EXPOSE 8080
-
 ENTRYPOINT ["java", "-jar", "app.jar"]
