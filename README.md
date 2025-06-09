@@ -1,7 +1,7 @@
 <a id="readme-top"></a>
 
 
-<h3 align="center">Tree Traversal</h3>
+<h1 align="center">Tree Traversal</h1>
 
  
 
