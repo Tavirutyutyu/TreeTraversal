@@ -40,7 +40,8 @@ public class TreeWalkerController {
                     @ApiResponse(responseCode = "404", description = "Directory not found."),
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             }
-    )    @GetMapping("/get_unique")
+    )
+    @GetMapping("/get_unique")
     public AccessedFilesDTO getUnique(@RequestParam DirectoryDTO directory) throws IOException {
         return treeWalkerService.getUnique(directory.directory());
     }

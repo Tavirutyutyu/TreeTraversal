@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
 @Service
@@ -20,9 +21,11 @@ public class DocumentationService {
         return wrapHtml(parseMarkdownToHtml(markdown));
     }
 
-    private String fetchMarkdownFromGitHub() throws IOException {
-        try (InputStream in = new URL(GITHUB_RAW_URL).openStream()) {
+    private String fetchMarkdownFromGitHub() throws IOException{
+        try (InputStream in = new URI(GITHUB_RAW_URL).toURL().openStream()) {
             return new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
     }
 
