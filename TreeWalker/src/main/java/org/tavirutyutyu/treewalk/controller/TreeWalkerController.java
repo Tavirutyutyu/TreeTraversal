@@ -37,7 +37,7 @@ public class TreeWalkerController {
                             description = "Successfully retrieved unique file names",
                             content = @Content(schema = @Schema(implementation = AccessedFilesDTO.class))
                     ),
-                    @ApiResponse(responseCode = "400", description = "Invalid directory input"),
+                    @ApiResponse(responseCode = "404", description = "Directory not found."),
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             }
     )    @GetMapping("/get_unique")
