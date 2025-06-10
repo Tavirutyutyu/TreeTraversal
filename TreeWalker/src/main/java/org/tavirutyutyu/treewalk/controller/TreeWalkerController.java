@@ -47,7 +47,7 @@ public class TreeWalkerController {
 
     @Operation(
             summary = "View project documentation",
-            description = "Returns the project documentation from the README.md file hosted on the GitHub repository. The content is served as styled HTML.",
+            description = "Returns the project documentation from the README.md file hosted on the GitHub repository. The content is served as styled HTML. (best to open the endpoint in browser)",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
