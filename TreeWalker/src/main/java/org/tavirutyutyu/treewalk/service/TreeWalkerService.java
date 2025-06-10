@@ -36,7 +36,7 @@ public class TreeWalkerService {
         return new AccessedFilesDTO(fileNames);
     }
 
-    private Set<String> getFileNames(String path) throws IOException {
+    private Set<String> getFileNames(String path) throws NoSuchFileException {
         String fullPath = isRunningInContainer() ? "/host" + path : path;
         try (Stream<Path> paths = Files.walk(Paths.get(fullPath))) {
             return paths.filter(Files::isRegularFile).map(p -> p.getFileName().toString()).collect(Collectors.toSet());
