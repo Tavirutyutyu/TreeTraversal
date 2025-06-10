@@ -10,6 +10,7 @@ import org.tavirutyutyu.treewalk.repository.AccessedFilesRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -39,6 +40,8 @@ public class TreeWalkerService {
         String fullPath = isRunningInContainer() ? "/host" + path : path;
         try (Stream<Path> paths = Files.walk(Paths.get(fullPath))) {
             return paths.filter(Files::isRegularFile).map(p -> p.getFileName().toString()).collect(Collectors.toSet());
+        } catch (IOException e) {
+            throw new NoSuchFileException(fullPath);
         }
     }
 
