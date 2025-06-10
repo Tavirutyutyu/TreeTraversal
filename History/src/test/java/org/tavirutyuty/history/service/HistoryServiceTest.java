@@ -53,7 +53,7 @@ class HistoryServiceTest {
         accessedFile2.setEvent(accessEventEntity);
 
         when(accessEventRepository.findAll()).thenReturn(List.of(accessEventEntity));
-        when(accessedFilesRepository.findAll()).thenReturn(List.of(accessedFile1, accessedFile2));
+        when(accessedFilesRepository.findAllByEventId(event_id)).thenReturn(Set.of(accessedFile1, accessedFile2));
 
         List<HistoryDTO> result = service.getAllHistory();
         assertEquals(1, result.size());
