@@ -61,6 +61,4 @@ class HistoryServiceTest {
         assertEquals(request, historyDTO.request());
         assertEquals(Set.of(filename1, filename2), historyDTO.returnedFileNames());
     }
-
-
 }
