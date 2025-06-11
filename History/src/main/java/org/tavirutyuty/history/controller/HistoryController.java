@@ -13,7 +13,6 @@ import org.tavirutyuty.history.service.HistoryService;
 
 import java.util.List;
 
-@Tag(name = "History API", description = "Endpoints for fetching historical file access records.")
 @RestController
 public class HistoryController {
     private final HistoryService service;
