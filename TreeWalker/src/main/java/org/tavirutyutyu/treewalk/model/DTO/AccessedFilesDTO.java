@@ -1,4 +1,4 @@
-package org.tavirutyutyu.treewalk.model;
+package org.tavirutyutyu.treewalk.model.DTO;
 
 import java.util.Set;
 

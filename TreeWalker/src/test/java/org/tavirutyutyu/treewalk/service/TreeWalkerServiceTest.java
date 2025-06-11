@@ -2,7 +2,7 @@ package org.tavirutyutyu.treewalk.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.tavirutyutyu.treewalk.model.AccessedFilesDTO;
+import org.tavirutyutyu.treewalk.model.DTO.AccessedFilesDTO;
 import org.tavirutyutyu.treewalk.repository.AccessEventRepository;
 import org.tavirutyutyu.treewalk.repository.AccessedFilesRepository;
 
