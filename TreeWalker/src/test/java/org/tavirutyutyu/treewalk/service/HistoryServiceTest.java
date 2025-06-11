@@ -2,8 +2,8 @@ package org.tavirutyutyu.treewalk.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.tavirutyutyu.treewalk.model.AccessEventEntity;
-import org.tavirutyutyu.treewalk.model.AccessedFilesEntity;
+import org.tavirutyutyu.treewalk.model.entity.AccessEventEntity;
+import org.tavirutyutyu.treewalk.model.entity.AccessedFilesEntity;
 import org.tavirutyutyu.treewalk.model.DTO.HistoryDTO;
 import org.tavirutyutyu.treewalk.repository.AccessEventRepository;
 import org.tavirutyutyu.treewalk.repository.AccessedFilesRepository;

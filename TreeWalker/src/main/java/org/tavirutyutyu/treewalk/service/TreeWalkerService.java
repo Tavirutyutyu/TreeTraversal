@@ -2,9 +2,9 @@ package org.tavirutyutyu.treewalk.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.tavirutyutyu.treewalk.model.AccessEventEntity;
+import org.tavirutyutyu.treewalk.model.entity.AccessEventEntity;
 import org.tavirutyutyu.treewalk.model.DTO.AccessedFilesDTO;
-import org.tavirutyutyu.treewalk.model.AccessedFilesEntity;
+import org.tavirutyutyu.treewalk.model.entity.AccessedFilesEntity;
 import org.tavirutyutyu.treewalk.repository.AccessEventRepository;
 import org.tavirutyutyu.treewalk.repository.AccessedFilesRepository;
 
